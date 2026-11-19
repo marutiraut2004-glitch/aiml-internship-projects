@@ -1,0 +1,13 @@
+torch>=2.2
+monai>=1.3
+pydicom>=2.4
+numpy
+scipy
+pillow
+scikit-learn
+fastapi
+uvicorn
+python-multipart
+requests
+pytest
+httpx

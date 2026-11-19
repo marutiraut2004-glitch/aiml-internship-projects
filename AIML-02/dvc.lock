@@ -1,0 +1,88 @@
+schema: '2.0'
+stages:
+  generate:
+    cmd: python -m imaging.synth --out data --n-train 3000 --n-val 500 --n-test 
+      500 --seed 0
+    deps:
+    - path: imaging/dicom_utils.py
+      hash: md5
+      md5: 101c80d02add6553ea1439461e4a9aa3
+      size: 2956
+    - path: imaging/synth.py
+      hash: md5
+      md5: b0dfcf65c2f0627f4267c39152f8b7b2
+      size: 3536
+    params:
+      params.yaml:
+        data:
+          n_train: 3000
+          n_val: 500
+          n_test: 500
+          seed: 0
+    outs:
+    - path: data
+      hash: md5
+      md5: 6ac7a9bd8ef242e3a32804d25fefd559.dir
+      size: 51135432
+      nfiles: 9
+  train:
+    cmd: python -m imaging.train --data data --out models --epochs 16 --batch 32
+      --lr 0.002 --seed 0
+    deps:
+    - path: data/train.npz
+      hash: md5
+      md5: 94ba1cd5feff2f5c7e1f8b4c57f0ec61
+      size: 38200137
+    - path: data/val.npz
+      hash: md5
+      md5: bb2001c7d3a1865b6c66bf52ff19a588
+      size: 6370969
+    - path: imaging/model.py
+      hash: md5
+      md5: 27ff110a94729e90807bb145407e9e6b
+      size: 2096
+    - path: imaging/train.py
+      hash: md5
+      md5: 2cef5b14085c4fa2ddf0d0955e25d8b4
+      size: 3297
+    params:
+      params.yaml:
+        train:
+          epochs: 16
+          batch: 32
+          lr: 0.002
+          seed: 0
+    outs:
+    - path: models/model.pt
+      hash: md5
+      md5: 3c29e60d8ca86044aa02266b1486edcc
+      size: 1257302
+    - path: models/train_metrics.json
+      hash: md5
+      md5: 14f90dbbefda8fc1903c542d99fd8677
+      size: 2278
+  evaluate:
+    cmd: python -m imaging.evaluate --data data --model models/model.pt --out 
+      models/metrics.json
+    deps:
+    - path: data/test.npz
+      hash: md5
+      md5: 5c2c1ff1f068876c9e6d965719c9c22a
+      size: 6363506
+    - path: imaging/evaluate.py
+      hash: md5
+      md5: 05a0b5ddd241ad59652574eab589f12f
+      size: 2080
+    - path: imaging/gradcam.py
+      hash: md5
+      md5: f7372efc336b8c23a38cf6a957cdd890
+      size: 3057
+    - path: models/model.pt
+      hash: md5
+      md5: 3c29e60d8ca86044aa02266b1486edcc
+      size: 1257302
+    outs:
+    - path: models/metrics.json
+      hash: md5
+      md5: c6245ecdbd0e62fbd50ec24f155075ad
+      size: 294

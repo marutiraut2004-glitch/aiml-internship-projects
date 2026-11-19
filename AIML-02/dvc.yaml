@@ -1,0 +1,18 @@
+# Reproduce everything:  dvc repro        See the graph:  dvc dag
+# Large files (data/, models/) are tracked by DVC, not git. Add a remote with `dvc remote add -d storage <url>`.
+stages:
+  generate:
+    cmd: python -m imaging.synth --out data --n-train ${data.n_train} --n-val ${data.n_val} --n-test ${data.n_test} --seed ${data.seed}
+    deps: [imaging/synth.py, imaging/dicom_utils.py]
+    params: [data]
+    outs: [data]
+  train:
+    cmd: python -m imaging.train --data data --out models --epochs ${train.epochs} --batch ${train.batch} --lr ${train.lr} --seed ${train.seed}
+    deps: [data/train.npz, data/val.npz, imaging/train.py, imaging/model.py]
+    params: [train]
+    outs: [models/model.pt]
+    metrics: [models/train_metrics.json]
+  evaluate:
+    cmd: python -m imaging.evaluate --data data --model models/model.pt --out models/metrics.json
+    deps: [data/test.npz, models/model.pt, imaging/evaluate.py, imaging/gradcam.py]
+    metrics: [models/metrics.json]

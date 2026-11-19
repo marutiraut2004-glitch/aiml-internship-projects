@@ -1,0 +1,10 @@
+data:
+  n_train: 3000
+  n_val: 500
+  n_test: 500
+  seed: 0
+train:
+  epochs: 16
+  batch: 32
+  lr: 0.002
+  seed: 0
