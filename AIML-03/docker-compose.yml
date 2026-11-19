@@ -1,0 +1,37 @@
+# docker compose up redis api                      -> API with local ranker
+# docker compose --profile triton up               -> adds Triton, set RANKER_BACKEND=triton
+# docker compose --profile airflow up airflow      -> Airflow with the nightly DAG
+services:
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  api:
+    build: .
+    depends_on: [redis]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      RANKER_BACKEND: ${RANKER_BACKEND:-local}
+      TRITON_URL: triton:8000
+      REC_ARTIFACT_DIR: /app/artifacts
+      REC_DATA_DIR: /app/data
+    volumes: ["./artifacts:/app/artifacts", "./data:/app/data"]
+    ports: ["8080:8080"]
+
+  triton:
+    profiles: ["triton"]
+    image: nvcr.io/nvidia/tritonserver:24.08-tf2-py3
+    command: tritonserver --model-repository=/models
+    volumes: ["./serving/triton/model_repository:/models"]
+    ports: ["8000:8000", "8001:8001", "8002:8002"]
+
+  airflow:
+    profiles: ["airflow"]
+    build: .
+    command: bash -c "pip install -q apache-airflow && airflow standalone"
+    environment:
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/recsys/airflow/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      API_RELOAD_URL: http://api:8080/health
+    volumes: [".:/opt/recsys"]
+    ports: ["8088:8080"]

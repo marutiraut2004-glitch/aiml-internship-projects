@@ -1,0 +1,30 @@
+{
+  "users_evaluated": 1000,
+  "candidate_recall@200": 0.712,
+  "ann_overlap_with_exact@200": 0.9915999999999999,
+  "pop": {
+    "recall@10": 0.05720000000000019,
+    "ndcg@10": 0.04345824635929572,
+    "hit_rate@10": 0.247
+  },
+  "retrieval_only": {
+    "recall@10": 0.21119999999999925,
+    "ndcg@10": 0.19830892586094648,
+    "hit_rate@10": 0.666
+  },
+  "two_stage": {
+    "recall@10": 0.19839999999999958,
+    "ndcg@10": 0.19365098259593108,
+    "hit_rate@10": 0.626
+  },
+  "latency_ms": {
+    "cache_backend": "redis",
+    "ranker_backend": "local",
+    "index": "hnsw",
+    "uncached_p50": 2.541092000029721,
+    "uncached_p95": 3.1802847500188136,
+    "retrieval_p50": 0.70275300001299,
+    "ranking_p50": 1.8296045000170125,
+    "cached_p50": 0.11255799998366456
+  }
+}
