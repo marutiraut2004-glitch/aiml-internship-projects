@@ -1,0 +1,9 @@
+data/
+artifacts/
+__pycache__/
+*.pyc
+serving/triton/model_repository/
+spark-warehouse/
+metastore_db/
+derby.log
+.pytest_cache/

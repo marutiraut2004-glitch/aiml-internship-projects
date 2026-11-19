@@ -1,0 +1,15 @@
+tensorflow>=2.16
+tf-keras>=2.16
+tensorflow-recommenders>=0.7.3
+faiss-cpu>=1.8
+redis>=5
+pyspark>=3.5
+pandas
+pyarrow
+numpy
+fastapi
+uvicorn
+tritonclient[http]
+httpx
+pytest
+# apache-airflow is only needed inside the Airflow container (see docker-compose.yml)
