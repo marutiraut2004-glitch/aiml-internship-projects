@@ -1,0 +1,16 @@
+{
+  "n_test": 500,
+  "auc": 0.995264,
+  "accuracy": 0.968,
+  "sensitivity": 0.948,
+  "specificity": 0.988,
+  "confusion": {
+    "tp": 237,
+    "fp": 3,
+    "tn": 247,
+    "fn": 13
+  },
+  "gradcam_pointing_accuracy": 0.97,
+  "gradcam_pointing_random_baseline": 0.0285,
+  "gradcam_samples": 100
+}
