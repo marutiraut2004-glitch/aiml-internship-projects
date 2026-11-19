@@ -1,0 +1,31 @@
+# Uses the bundled pretrained/ weights. To use your own run, change the mount to ./models (after `dvc repro`).
+#   docker compose up --build        UI on http://localhost:3000, Orthanc explorer on http://localhost:8042
+services:
+  orthanc:
+    image: jodogne/orthanc:1.12.4
+    ports: ["8042:8042", "4242:4242"]
+    environment:
+      ORTHANC__AUTHENTICATION_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: '{"orthanc": "orthanc"}'   # change for anything beyond a local demo
+    volumes: ["orthanc-db:/var/lib/orthanc/db"]
+
+  backend:
+    build: .
+    depends_on: [orthanc]
+    environment:
+      IMG_MODEL_PATH: /models/model.pt
+      IMG_DATA_DIR: /runtime
+      ORTHANC_URL: http://orthanc:8042
+      ORTHANC_USER: orthanc
+      ORTHANC_PASSWORD: orthanc
+    volumes: ["./pretrained:/models:ro", "runtime:/runtime"]
+    ports: ["8000:8000"]
+
+  frontend:
+    build: ./frontend
+    depends_on: [backend]
+    ports: ["3000:80"]
+
+volumes:
+  orthanc-db:
+  runtime:
